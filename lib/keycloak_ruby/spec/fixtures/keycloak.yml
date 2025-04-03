@@ -1,0 +1,9 @@
+# lib/keycloak_ruby/spec/fixtures/keycloak.yml
+test:
+  keycloak_url: http://keycloak.test
+  app_host: http://localhost:3000
+  realm: test-realm
+  oauth_client_id: test-client
+  oauth_client_secret: secret123
+  admin_client_id: admin-cli
+  admin_client_secret: admin-secret
