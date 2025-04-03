@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/version.rb
 # Module for interacting with Keycloak
-
 module KeycloakRuby
   # Version module following Semantic Versioning 2.0 guidelines
   # Provides detailed version information and helper methods
@@ -13,7 +14,7 @@ module KeycloakRuby
   #
   # @example Checking version
   #   KeycloakRuby::Version >= '0.1.0'    # => true
-
+  # Module for work with Version
   module Version
     # Major version number (incompatible API changes)
     MAJOR = 0

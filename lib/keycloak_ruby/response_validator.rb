@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module KeycloakRuby
   # Validates Keycloak API responses with both safe and strict modes
   #
@@ -88,10 +90,10 @@ module KeycloakRuby
               "Keycloak API request failed with status #{@response.code}: #{extract_error_message}"
       elsif invalid_grant?
         raise Errors::TokenRefreshFailed,
-              "Invalid grant: #{@data['error_description'] || 'Refresh token invalid or expired'}"
+              "Invalid grant: #{@data["error_description"] || "Refresh token invalid or expired"}"
       elsif error_present?
         raise Errors::TokenRefreshFailed,
-              "Keycloak error: #{@data['error']} - #{@data['error_description']}"
+              "Keycloak error: #{@data["error"]} - #{@data["error_description"]}"
       else
         raise Errors::TokenRefreshFailed,
               "Invalid response: access token missing from response"

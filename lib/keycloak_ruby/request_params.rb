@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/request_params.rb
 module KeycloakRuby
   # A small, typed struct for request parameters

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/client.rb
 module KeycloakRuby
   # Client for interacting with Keycloak (create, delete, and find users, etc.).

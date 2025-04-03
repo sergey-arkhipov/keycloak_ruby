@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby.rb
 require "keycloak_ruby/version"
 require "keycloak_ruby/config"
@@ -31,4 +33,5 @@ module KeycloakRuby
       config.validate!
     end
   end
+  VERSION = Version::VERSION
 end

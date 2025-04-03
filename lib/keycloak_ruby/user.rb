@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/user.rb
 module KeycloakRuby
   # User-related operations for interacting with Keycloak.

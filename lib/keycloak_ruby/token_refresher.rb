@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/token_refresher.rb`
 module KeycloakRuby
   # Handles OAuth2 refresh token flow with Keycloak

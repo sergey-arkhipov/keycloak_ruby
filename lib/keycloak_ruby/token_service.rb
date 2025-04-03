@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/token_service.rb
 # :reek:FeatureEnvy
 module KeycloakRuby

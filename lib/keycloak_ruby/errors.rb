@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/errors.rb
 module KeycloakRuby
   # Namespace for all KeycloakRuby specific errors

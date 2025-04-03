@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/request_performer.rb
 
 module KeycloakRuby

@@ -1,0 +1,12 @@
+AllCops:
+  NewCops: enable
+
+plugins:
+  - rubocop-rake
+  - rubocop-rspec
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes

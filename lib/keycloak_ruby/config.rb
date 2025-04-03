@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/keycloak_ruby/config.rb
 module KeycloakRuby
   # Configuration class for Keycloak Ruby gem.

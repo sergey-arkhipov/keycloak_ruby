@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # keycloak_ruby/testing/keycloak_helpers.rb
 # :reek:UtilityFunction :reek:ControlParameter :reek:ManualDispatch :reek:BooleanParameter :reek:LongParameterList
 module KeycloakRuby
