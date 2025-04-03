@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+require "omniauth"
+require "omniauth-openid_connect"
+require "httparty"
+require "jwt"
+
 # lib/keycloak_ruby.rb
 require "keycloak_ruby/version"
 require "keycloak_ruby/config"
