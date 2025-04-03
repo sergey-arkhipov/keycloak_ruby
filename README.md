@@ -52,34 +52,37 @@ Now under development, so you need create:
 
 It is assumed that you have a User model in Rails app
 
-````
-
 ## Architecture Overview
 
 ### Component Diagram
 
 ```mermaid
 flowchart TD
-    subgraph Rails Application
-    A[Controller] --> B[TokenService]
-    B --> C[TokenRefresher]
-    C --> D[Keycloak Server]
-    D --> C
-    C --> B
-    B --> E[User Model]
-    B --> F[ResponseValidator]
-    C --> F
-    F --> G[Errors]
-    B --> H[JWT Decoder]
-    H --> I[JWKS Cache]
+    subgraph Rails_Application["Rails Application"]
+        A[Controller] --> B[TokenService]
+        B --> C[TokenRefresher]
+        C --> D[Keycloak Server]
+        D -->|Refresh Token| C
+        C -->|New Tokens| B
+        B --> E[User Model]
+        B --> F[ResponseValidator]
+        C --> F
+        F --> G[Errors]
+        B --> H[JWT Decoder]
+        H --> I[JWKS Cache]
+    end
 
     style A fill:#f9f,stroke:#333
     style B fill:#bbf,stroke:#333
     style C fill:#bbf,stroke:#333
     style D fill:#f96,stroke:#333
     style E fill:#9f9,stroke:#333
+    style F fill:#bbf,stroke:#333
+    style G fill:#f66,stroke:#333
+    style H fill:#bbf,stroke:#333
+    style I fill:#ccf,stroke:#333
 
-````
+```
 
 ### Authentication Sequence
 
@@ -130,6 +133,10 @@ sequenceDiagram
 4. **Error Handling**:
    - Clear sessions on invalid tokens
    - Propagates meaningful errors
+
+```
+
+```
 
 ```
 
