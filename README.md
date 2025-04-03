@@ -1,3 +1,59 @@
+# Description
+
+This library is designed to use Keycloak identification in Rails application
+
+## Installation
+
+Add to Gemfile
+
+````bash
+gem "keycloak_ruby", git: "https://github.com/sergey-arkhipov/keycloak_ruby.git"
+
+Now under development, so you need create:
+
+```ruby
+# ApplicationController
+  def jwt_service
+    @jwt_service ||= KeycloakRuby::TokenService.new(session)
+  end
+
+  def authenticate_user!
+    redirect_to login_path unless current_user&.active?
+  end
+
+  def current_user
+    @current_user ||= jwt_service.find_user
+  end
+
+# SeesionController
+  def login
+    render :login, layout: "login"
+  end
+
+  def create
+    auth_info = request.env["omniauth.auth"]
+    jwt_service.store_tokens(auth_info[:credentials])
+    user = User.find_by(email: auth_info.dig(:info, :email))
+    return destroy unless user&.active?
+
+    redirect_to root_path, notice: I18n.t("user.auth_success")
+  end
+
+  def destroy
+    id_token = session[:id_token]
+    jwt_service.clear_tokens
+    logout_url = "#{KeycloakRuby.config.logout_url}?post_logout_redirect_uri=#{CGI.escape(root_url)}&" \
+                 "id_token_hint=#{id_token}"
+
+    redirect_to logout_url, allow_other_host: true
+  end
+
+````
+
+It is assumed that you have a User model in Rails app
+
+````
+
 ## Architecture Overview
 
 ### Component Diagram
@@ -5,31 +61,25 @@
 ```mermaid
 flowchart TD
     subgraph Rails Application
-        A[Controller] -->|1. Authenticate| B[TokenService]
-        A -->|2. Check Access| B
-        B -->|3. Validate/Refresh| C[TokenRefresher]
-        C -->|4. API Call| D[Keycloak Server]
-        B -->|5. User Lookup| E[User Model]
-    end
-
-    subgraph KeycloakRuby Gem
-        B --> F[ResponseValidator]
-        C --> F
-        F --> G[Errors]
-        B --> H[JWT Decoder]
-        H --> I[JWKS Cache]
-    end
-
-    D -->|6. Token Response| C
-    C -->|7. Valid Tokens| B
-    B -->|8. User/Claims| A
+    A[Controller] --> B[TokenService]
+    B --> C[TokenRefresher]
+    C --> D[Keycloak Server]
+    D --> C
+    C --> B
+    B --> E[User Model]
+    B --> F[ResponseValidator]
+    C --> F
+    F --> G[Errors]
+    B --> H[JWT Decoder]
+    H --> I[JWKS Cache]
 
     style A fill:#f9f,stroke:#333
     style B fill:#bbf,stroke:#333
     style C fill:#bbf,stroke:#333
     style D fill:#f96,stroke:#333
     style E fill:#9f9,stroke:#333
-```
+
+````
 
 ### Authentication Sequence
 
