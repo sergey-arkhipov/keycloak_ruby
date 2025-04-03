@@ -34,4 +34,9 @@ module KeycloakRuby
     end
   end
   VERSION = Version::VERSION
+  # Only load test helpers when in test environment
+  # Load test helpers only in test environment
+  if ENV["RACK_ENV"] == "test" || ENV["RAILS_ENV"] == "test" || defined?(RSpec) || defined?(Minitest)
+    require "keycloak_ruby/testing"
+  end
 end

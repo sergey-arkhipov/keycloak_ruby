@@ -111,3 +111,15 @@ module KeycloakRuby
     end
   end
 end
+# Automatically include in common test frameworks
+if defined?(RSpec)
+  RSpec.configure do |config|
+    config.include KeycloakRuby::Testing::KeycloakHelpers
+  end
+elsif defined?(Minitest)
+  module Minitest
+    class Test
+      include KeycloakRuby::Testing::KeycloakHelpers
+    end
+  end
+end
