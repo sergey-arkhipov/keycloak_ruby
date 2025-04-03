@@ -26,11 +26,18 @@ module KeycloakRuby
   # :reek:MissingSafeMethod
   class Config
     # Default path to configuration file (Rails.root/config/keycloak.yml)
-    DEFAULT_CONFIG_PATH = if defined?(Rails) && Rails.respond_to?(:root)
+    # DEFAULT_CONFIG_PATH = if defined?(Rails) && Rails.respond_to?(:root)
+    #                         Rails.root.join("config", "keycloak.yml")
+    #                       else
+    #                         File.expand_path("config/keycloak.yml", __dir__)
+    #                       end
+    DEFAULT_CONFIG_PATH = if defined?(Rails) && Rails.respond_to?(:root) && Rails.root
                             Rails.root.join("config", "keycloak.yml")
                           else
-                            File.expand_path("config/keycloak.yml", __dir__)
+                            # Fallback for non-Rails or when Rails isn't loaded yet
+                            File.expand_path("config/keycloak.yml", Dir.pwd)
                           end
+
     # :reek:Attribute
     attr_accessor :keycloak_url, :app_host, :realm, :admin_client_id,
                   :admin_client_secret, :oauth_client_id, :oauth_client_secret,
