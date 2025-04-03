@@ -26,22 +26,29 @@ module KeycloakRuby
   # :reek:MissingSafeMethod
   class Config
     # Default path to configuration file (Rails.root/config/keycloak.yml)
-    # DEFAULT_CONFIG_PATH = if defined?(Rails) && Rails.respond_to?(:root)
-    #                         Rails.root.join("config", "keycloak.yml")
-    #                       else
-    #                         File.expand_path("config/keycloak.yml", __dir__)
-    #                       end
     DEFAULT_CONFIG_PATH = if defined?(Rails) && Rails.respond_to?(:root) && Rails.root
                             Rails.root.join("config", "keycloak.yml")
                           else
                             # Fallback for non-Rails or when Rails isn't loaded yet
                             File.expand_path("config/keycloak.yml", Dir.pwd)
                           end
-
+    REQUIRED_ATTRIBUTES = %i[
+      keycloak_url
+      app_host
+      realm
+      oauth_client_id
+      oauth_client_secret
+    ].freeze
     # :reek:Attribute
-    attr_accessor :keycloak_url, :app_host, :realm, :admin_client_id,
-                  :admin_client_secret, :oauth_client_id, :oauth_client_secret,
-                  :realm_url, :redirect_url, :logout_url, :token_url
+    attr_accessor :keycloak_url,
+                  :app_host,
+                  :realm,
+                  :admin_client_id,
+                  :admin_client_secret,
+                  :oauth_client_id,
+                  :oauth_client_secret
+
+    attr_reader :config_path
 
     # Initialize configuration, optionally loading from YAML file
     #
@@ -51,7 +58,6 @@ module KeycloakRuby
     def initialize(config_path = DEFAULT_CONFIG_PATH)
       @config_path = config_path
       load_config
-      set_derived_values
     end
 
     # Validates that all required configuration attributes are present
@@ -60,9 +66,26 @@ module KeycloakRuby
     #
 
     def validate!
-      required_attributes.each do |attr, value|
-        raise KeycloakRuby::Errors::ConfigurationError, "#{attr} is required" if value.blank?
+      REQUIRED_ATTRIBUTES.each do |attr|
+        value = public_send(attr)
+        raise Errors::ConfigurationError, "#{attr} is required" if value.blank?
       end
+    end
+
+    def realm_url
+      "#{keycloak_url}/realms/#{realm}"
+    end
+
+    def redirect_url
+      "#{app_host}/auth/keycloak/callback"
+    end
+
+    def logout_url
+      "#{realm_url}/protocol/openid-connect/logout"
+    end
+
+    def token_url
+      "#{realm_url}/protocol/openid-connect/token"
     end
 
     private
@@ -72,33 +95,24 @@ module KeycloakRuby
     def load_config
       return unless File.exist?(@config_path)
 
-      yaml = YAML.safe_load(ERB.new(File.read(@config_path)).result, aliases: true)[Rails.env]
-      yaml.each do |key, value|
-        public_send(:"#{key}=", value) if respond_to?(:"#{key}=")
+      yaml_content = load_yaml_file
+      env_config = yaml_content[current_env] || {}
+      apply_config(env_config)
+    end
+
+    def load_yaml_file
+      YAML.safe_load(ERB.new(File.read(@config_path)).result, aliases: true)
+    end
+
+    def current_env
+      defined?(Rails) ? Rails.env : ENV["APP_ENV"] || "development"
+    end
+
+    def apply_config(config_hash)
+      config_hash.each do |key, value|
+        setter = :"#{key}="
+        public_send(setter, value) if respond_to?(setter)
       end
-    end
-
-    # Sets derived URLs based on base configuration
-    def set_derived_values
-      @redirect_url = "#{app_host}/auth/keycloak/callback"
-      @logout_url = "#{keycloak_url}/realms/#{realm}/protocol/openid-connect/logout"
-      @realm_url = "#{keycloak_url}/realms/#{realm}"
-      @token_url = "#{keycloak_url}/realms/#{realm}/protocol/openid-connect/token"
-    end
-
-    # Defines which attributes are required for validation
-    def required_attributes # rubocop:disable Metrics/MethodLength
-      {
-        keycloak_url: keycloak_url,
-        app_host: app_host,
-        realm: realm,
-        oauth_client_id: oauth_client_id,
-        oauth_client_secret: oauth_client_secret,
-        realm_url: realm_url,
-        redirect_url: redirect_url,
-        logout_url: logout_url,
-        token_url: token_url
-      }
     end
   end
 end
