@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "omniauth"
-require "omniauth-openid_connect"
+require "omniauth_openid_connect"
 require "httparty"
 require "jwt"
 
