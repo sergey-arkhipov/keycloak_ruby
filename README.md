@@ -6,10 +6,12 @@ This library is designed to use Keycloak identification in Rails application
 
 Add to Gemfile
 
-````bash
+```bash
 gem "keycloak_ruby", git: "https://github.com/sergey-arkhipov/keycloak_ruby.git"
 
-Now under development, so you need create:
+```
+
+Now under active development, so you need create manually:
 
 ```ruby
 # ApplicationController
@@ -48,11 +50,9 @@ Now under development, so you need create:
     redirect_to logout_url, allow_other_host: true
   end
 
-````
+```
 
 It is assumed that you have a User model in Rails app
-
-````
 
 ## Architecture Overview
 
@@ -79,7 +79,7 @@ flowchart TD
     style D fill:#f96,stroke:#333
     style E fill:#9f9,stroke:#333
 
-````
+```
 
 ### Authentication Sequence
 
