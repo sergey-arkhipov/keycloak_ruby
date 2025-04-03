@@ -7,3 +7,10 @@ test:
   oauth_client_secret: secret123
   admin_client_id: admin-cli
   admin_client_secret: admin-secret
+
+development:
+  keycloak_url: http://keycloak.dev
+  app_host: http://localhost:3000
+  realm: dev-realm
+  oauth_client_id: dev-client
+  oauth_client_secret: dev-secret

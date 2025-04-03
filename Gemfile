@@ -6,7 +6,10 @@ source "https://rubygems.org"
 gemspec
 
 gem "bundler"
+gem "byebug"
+gem "debug"
 gem "irb"
+gem "pry"
 gem "rake"
 gem "rspec"
 gem "rubocop"
