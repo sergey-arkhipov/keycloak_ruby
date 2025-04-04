@@ -15,7 +15,21 @@ Now under active development, so you need create manually:
 
 ```ruby
 # ApplicationController
-  include KeycloakRuby::Authentication
+before_action :authenticate_user!
+before_action :set_current_user
+
+
+  def jwt_service
+    @jwt_service ||= KeycloakRuby::TokenService.new(session)
+  end
+
+  def authenticate_user!
+    redirect_to login_path unless current_user&.active?
+  end
+
+  def current_user
+    @current_user ||= jwt_service.find_user
+  end
 
 # SeesionController
   def login
@@ -24,7 +38,7 @@ Now under active development, so you need create manually:
 
   def create
     auth_info = request.env["omniauth.auth"]
-    keycloak_jwt_service.store_tokens(auth_info[:credentials])
+    jwt_service.store_tokens(auth_info[:credentials])
     user = User.find_by(email: auth_info.dig(:info, :email))
     return destroy unless user&.active?
 
@@ -33,14 +47,12 @@ Now under active development, so you need create manually:
 
   def destroy
     id_token = session[:id_token]
-    keycloak_jwt_service.clear_tokens
+    jwt_service.clear_tokens
     logout_url = "#{KeycloakRuby.config.logout_url}?post_logout_redirect_uri=#{CGI.escape(root_url)}&" \
                  "id_token_hint=#{id_token}"
 
     redirect_to logout_url, allow_other_host: true
   end
-
-
 
 # config/routes.rb
 get '/login', to: 'sessions#login', as: :login

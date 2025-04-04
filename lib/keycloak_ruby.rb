@@ -17,7 +17,6 @@ require "keycloak_ruby/token_refresher"
 require "keycloak_ruby/token_service"
 require "keycloak_ruby/user"
 require "keycloak_ruby/version"
-require "keycloak_ruby/omniauth_setup"
 
 # Module for interacting with Keycloak
 module KeycloakRuby
@@ -55,11 +54,6 @@ module KeycloakRuby
       yield config
       config.validate!
     end
-
-    def setup!
-      # Other setup code if needed
-      OmniauthSetup.setup!
-    end
   end
   VERSION = Version::VERSION
   # Only load test helpers when in test environment
@@ -67,6 +61,4 @@ module KeycloakRuby
   if ENV["RACK_ENV"] == "test" || ENV["RAILS_ENV"] == "test" || defined?(RSpec) || defined?(Minitest)
     require "keycloak_ruby/testing"
   end
-  # Automatically setup when Rails is detected
-  KeycloakRuby::OmniauthSetup.setup! if defined?(Rails)
 end
