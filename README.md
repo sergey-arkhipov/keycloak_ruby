@@ -11,6 +11,12 @@ gem "keycloak_ruby", git: "https://github.com/sergey-arkhipov/keycloak_ruby.git"
 
 ```
 
+Create initializer for omniauth manually or use generator (config/initializers/omniauth.rb)
+
+```bash
+rails generate keycloak_ruby:install
+```
+
 Now under active development, so you need create manually:
 
 ```ruby
