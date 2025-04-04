@@ -2,10 +2,10 @@ PATH
   remote: .
   specs:
     keycloak_ruby (0.1.0)
-      httparty
-      jwt
-      omniauth
-      omniauth_openid_connect
+      httparty (~> 0.23)
+      jwt (~> 2.10)
+      omniauth (~> 2.1)
+      omniauth_openid_connect (~> 0.8)
 
 GEM
   remote: https://rubygems.org/
