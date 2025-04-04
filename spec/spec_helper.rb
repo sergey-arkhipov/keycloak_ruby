@@ -5,6 +5,8 @@ require "debug"
 require "webmock/rspec"
 WebMock.disable_net_connect!(allow_localhost: true)
 
+Dir[File.join(__dir__, "support", "**", "*.rb")].each { |f| require f }
+
 unless defined?(Rails)
   module Rails
     def self.env

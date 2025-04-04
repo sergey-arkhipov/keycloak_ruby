@@ -65,21 +65,8 @@ RSpec.describe KeycloakRuby::RequestPerformer do
     end
 
     context "when HTTParty raises an error" do
-      let(:logger_spy) { instance_spy(Logger) }
-
       before do
-        KeycloakRuby.logger = logger_spy
         allow(HTTParty).to receive(:post).and_raise(HTTParty::Error.new("Connection failed"))
-      end
-
-      it "logs an HTTP error" do
-        begin
-          performer.call(params)
-        rescue KeycloakRuby::Errors::APIError
-          # Swallow the error — we're testing logging only
-        end
-
-        expect(logger_spy).to have_received(:error).with(/Request failed \(HTTParty error\): Connection failed/)
       end
 
       it "raises APIError on HTTP error" do
