@@ -8,6 +8,7 @@ WebMock.disable_net_connect!(allow_localhost: true)
 Dir[File.join(__dir__, "support", "**", "*.rb")].each { |f| require f }
 
 unless defined?(Rails)
+  # Mock Rails for tests
   module Rails
     def self.env
       @env ||= ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"] || "test")
@@ -26,8 +27,9 @@ unless defined?(Rails)
   end
 end
 
+# Mock User model for test purpose
 class ::User
-  def self.find_by(email:)
+  def self.find_by(*)
     nil
   end
 end
