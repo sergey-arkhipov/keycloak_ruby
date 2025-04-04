@@ -64,14 +64,14 @@ module KeycloakRuby
 
     def handle_http_error(exception)
       error_message = "Token refresh HTTP error: #{exception.message}"
-      Rails.logger.error(error_message)
+      KeycloakRuby.logger.error(error_message)
       raise Errors::TokenRefreshFailed, error_message
     end
 
     # :reek:FeatureEnvy
     def handle_failed_validation(response)
       error_message = "Token refresh failed. Status: #{response.code}, Body: #{response.body.truncate(200)}"
-      Rails.logger.error(error_message)
+      KeycloakRuby.logger.error(error_message)
       raise Errors::TokenRefreshFailed, error_message
     end
 
@@ -93,11 +93,11 @@ module KeycloakRuby
     end
 
     def log_refresh_attempt
-      Rails.logger.info("Attempting token refresh for client: #{@config.oauth_client_id}")
+      KeycloakRuby.logger.info("Attempting token refresh for client: #{@config.oauth_client_id}")
     end
 
     def log_successful_refresh
-      Rails.logger.info("Successfully refreshed tokens for client: #{@config.oauth_client_id}")
+      KeycloakRuby.logger.info("Successfully refreshed tokens for client: #{@config.oauth_client_id}")
     end
   end
 end

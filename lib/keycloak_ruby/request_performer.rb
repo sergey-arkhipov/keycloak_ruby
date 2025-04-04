@@ -59,7 +59,7 @@ module KeycloakRuby
       code          = response.code
       error_message = request_params.error_message
       KeycloakRuby.logger.error("#{error_message}: #{code} => #{response.body}")
-      raise request_params.error_class, "#{error_message}: #{response.body}"
+      raise request_params.error_class, "#{error_message}: #{code} => #{response.body}"
     end
   end
 end

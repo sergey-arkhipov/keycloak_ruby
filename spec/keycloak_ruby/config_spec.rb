@@ -1,20 +1,5 @@
 # frozen_string_literal: true
 
-# At the top of your spec file (or in spec_helper.rb)
-unless defined?(Rails)
-  module Rails
-    def self.env
-      @env ||= ActiveSupport::StringInquirer.new(ENV["RAILS_ENV"] || "test")
-    end
-
-    # Only define Application if needed for other tests
-    class Application
-      def env
-        Rails.env
-      end
-    end
-  end
-end
 # spec/keycloak_ruby/config_spec.rb
 require "spec_helper"
 

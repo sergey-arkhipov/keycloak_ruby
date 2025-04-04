@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 # lib/keycloak_ruby/token_service.rb
-# :reek:FeatureEnvy
 module KeycloakRuby
   # Service for check and refresh jwt tokens
   class TokenService
@@ -46,7 +45,7 @@ module KeycloakRuby
     rescue Errors::TokenExpired # Normal refresh
       refresh_current_token
     rescue Errors::TokenInvalid => e # Wrong token refresh
-      Rails.logger.error("JWT Error: #{e.message}")
+      KeycloakRuby.logger.error("JWT Error: #{e.message}")
       clear_tokens
       nil
     end
@@ -83,7 +82,7 @@ module KeycloakRuby
         decode_token(new_tokens["access_token"])
       end
     rescue Errors::TokenRefreshFailed => e
-      Rails.logger.error("Refresh failed: #{e.message}")
+      KeycloakRuby.logger.error("Refresh failed: #{e.message}")
       clear_tokens
       nil
     end
