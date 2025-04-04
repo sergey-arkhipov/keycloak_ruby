@@ -8,7 +8,6 @@ module KeycloakRuby
 
     included do
       before_action :authenticate_user!
-      before_action :set_current_user
     end
 
     def keycloak_jwt_service
@@ -21,10 +20,6 @@ module KeycloakRuby
 
     def current_user
       @current_user ||= keycloak_jwt_service.find_user
-    end
-
-    def set_current_user
-      Current.user = current_user
     end
   end
 end
