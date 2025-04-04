@@ -1,8 +1,12 @@
+# frozen_string_literal: true
+
 # spec/keycloak_ruby/client_spec.rb
+require "spec_helper"
+
 RSpec.describe KeycloakRuby::Client do
   subject(:client) { described_class.new(keycloak_config) }
 
-  let(:keycloak_config) { KeycloakRuby::Config.new("lib/keycloak_ruby/spec/fixtures/keycloak.yml") }
+  let(:keycloak_config) { KeycloakRuby::Config.new("spec/fixtures/keycloak.yml") }
 
   before do
     stub_request(:post, "http://keycloak.test/realms/test-realm/protocol/openid-connect/token")

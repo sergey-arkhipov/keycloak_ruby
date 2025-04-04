@@ -20,6 +20,22 @@ require "keycloak_ruby/request_params"
 # Module for interacting with Keycloak
 module KeycloakRuby
   class << self
+    # Logger used throughout the gem
+    #
+    # Defaults to Rails.logger if available, or a standard Logger.
+    #
+    # @return [Logger]
+    attr_writer :logger
+
+    def logger
+      @logger ||= if defined?(Rails) && Rails.respond_to?(:logger) && Rails.logger
+                    Rails.logger
+                  else
+                    require "logger"
+                    Logger.new($stdout).tap { |log| log.level = Logger::INFO }
+                  end
+    end
+
     # Returns the singleton configuration object. The configuration is
     # initialized on first access and validated immediately.
     #
