@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.summary     = KeycloakRuby::Version
   spec.description = "Library for using keycloak with Rails"
   spec.authors     = ["Sergey Arkhipov", "Georgy Shcherbakov"]
-  spec.email       = "sergey-arkhipov@ya.ru"
+  spec.email       = %w[sergey-arkhipov@ya.ru lordsynergymail@gmail.com]
   spec.homepage    = "https://github.com/sergey-arkhipov/keycloak_ruby#"
   spec.license = "GPL"
   spec.required_ruby_version = ">= 3.4"
