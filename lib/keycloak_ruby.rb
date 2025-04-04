@@ -6,6 +6,7 @@ require "httparty"
 require "jwt"
 
 # lib/keycloak_ruby.rb
+require "generators/keycloak_ruby/install_generator" if defined?(Rails)
 require "keycloak_ruby/authentication"
 require "keycloak_ruby/client"
 require "keycloak_ruby/config"
