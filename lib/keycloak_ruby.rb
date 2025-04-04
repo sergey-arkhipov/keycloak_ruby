@@ -6,16 +6,17 @@ require "httparty"
 require "jwt"
 
 # lib/keycloak_ruby.rb
-require "keycloak_ruby/version"
+require "keycloak_ruby/authentication"
+require "keycloak_ruby/client"
 require "keycloak_ruby/config"
 require "keycloak_ruby/errors"
-require "keycloak_ruby/client"
-require "keycloak_ruby/user"
-require "keycloak_ruby/token_service"
-require "keycloak_ruby/token_refresher"
-require "keycloak_ruby/response_validator"
-require "keycloak_ruby/request_performer"
 require "keycloak_ruby/request_params"
+require "keycloak_ruby/request_performer"
+require "keycloak_ruby/response_validator"
+require "keycloak_ruby/token_refresher"
+require "keycloak_ruby/token_service"
+require "keycloak_ruby/user"
+require "keycloak_ruby/version"
 
 # Module for interacting with Keycloak
 module KeycloakRuby
