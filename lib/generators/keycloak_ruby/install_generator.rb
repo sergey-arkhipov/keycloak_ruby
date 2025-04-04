@@ -14,7 +14,7 @@ module KeycloakRuby
   # Rails generator that creates the OmniAuth initializer configuration
   # for Keycloak authentication
   class InstallGenerator < Rails::Generators::Base
-    source_root File.expand_path("../templates", __dir__)
+    source_root File.expand_path("../../templates", __dir__)
     desc "Creates Keycloak Ruby initializer for OmniAuth configuration"
 
     ##
