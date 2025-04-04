@@ -15,6 +15,10 @@ Now under active development, so you need create manually:
 
 ```ruby
 # ApplicationController
+before_action :authenticate_user!
+before_action :set_current_user
+
+
   def jwt_service
     @jwt_service ||= KeycloakRuby::TokenService.new(session)
   end
@@ -50,6 +54,11 @@ Now under active development, so you need create manually:
     redirect_to logout_url, allow_other_host: true
   end
 
+# config/routes.rb
+get '/login', to: 'sessions#login', as: :login
+get '/auth/:provider/callback', to: 'sessions#create'
+delete '/logout', to: 'sessions#destroy', as: :logout
+
 ```
 
 It is assumed that you have a User model in Rails app
@@ -74,15 +83,18 @@ flowchart TD
         H --> I[JWKS Cache]
     end
 
-    style A fill:#f9f,stroke:#333
-    style B fill:#bbf,stroke:#333
-    style C fill:#bbf,stroke:#333
-    style D fill:#f96,stroke:#333
-    style E fill:#9f9,stroke:#333
-    style F fill:#bbf,stroke:#333
-    style G fill:#f66,stroke:#333
-    style H fill:#bbf,stroke:#333
-    style I fill:#ccf,stroke:#333
+    style A fill:#ff66ff,stroke:#000000,color:#000000
+    style B fill:#66b3ff,stroke:#000000,color:#000000
+    style C fill:#66b3ff,stroke:#000000,color:#000000
+    style D fill:#ff9933,stroke:#000000,color:#000000
+    style E fill:#66cc66,stroke:#000000,color:#000000
+    style F fill:#66b3ff,stroke:#000000,color:#000000
+    style G fill:#ff6666,stroke:#000000,color:#000000
+    style H fill:#66b3ff,stroke:#000000,color:#000000
+    style I fill:#99ccff,stroke:#000000,color:#000000
+
+    %% Subgraph styling - transparent with black border only
+    style Rails_Application fill:none,stroke:#000000,color:#000000
 
 ```
 
@@ -139,6 +151,13 @@ sequenceDiagram
 ```
 
 ```
+
+## Test
+
+For test purpose there mock helper sign_in(user)
+
+- add `require "keycloak_ruby/testing/keycloak_helpers"` to keycloak_helper.rb
+- add sign_in in tests `config.include KeycloakRuby::Testing::KeycloakHelpers`
 
 ```
 
