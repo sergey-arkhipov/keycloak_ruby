@@ -5,11 +5,10 @@ Gem::Specification.new do |spec|
   spec.name        = "keycloak_ruby"
   spec.version     = "0.0.1"
   spec.summary     = KeycloakRuby::Version
-  spec.description = "Librarary for using keycloak with Rails"
-  spec.authors     = ["Sergey Arkhipov", "Georgy Sherbakov"]
-  spec.email       = "sergey-arkhipov@ya.ru"
-  spec.homepage    =
-    "https://github.com/sergey-arkhipov/keycloak_ruby#"
+  spec.description = "Library for using keycloak with Rails"
+  spec.authors     = ["Sergey Arkhipov", "Georgy Shcherbakov"]
+  spec.email       = %w[sergey-arkhipov@ya.ru lordsynergymail@gmail.com]
+  spec.homepage    = "https://github.com/sergey-arkhipov/keycloak_ruby#"
   spec.license = "GPL"
   spec.required_ruby_version = ">= 3.4"
   gemspec = File.basename(__FILE__)

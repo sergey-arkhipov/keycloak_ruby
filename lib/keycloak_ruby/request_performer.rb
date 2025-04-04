@@ -31,7 +31,7 @@ module KeycloakRuby
       verify_response!(response, request_params)
       response
     rescue HTTParty::Error => e
-      Rails.logger.error("#{request_params.error_message} (HTTParty error): #{e.message}")
+      KeycloakRuby.logger.error("#{request_params.error_message} (HTTParty error): #{e.message}")
       raise request_params.error_class, e.message
     end
 
@@ -58,7 +58,7 @@ module KeycloakRuby
 
       code          = response.code
       error_message = request_params.error_message
-      Rails.logger.error("#{error_message}: #{code} => #{response.body}")
+      KeycloakRuby.logger.error("#{error_message}: #{code} => #{response.body}")
       raise request_params.error_class, "#{error_message}: #{response.body}"
     end
   end

@@ -6,13 +6,16 @@ source "https://rubygems.org"
 gemspec
 
 gem "bundler"
-gem "byebug"
-gem "debug"
-gem "irb"
-gem "pry"
-gem "rake"
-gem "rspec"
-gem "rubocop"
-gem "rubocop-rake"
-gem "rubocop-rspec"
-gem "webmock"
+
+group :development, :test do
+  gem "byebug"
+  gem "debug"
+  gem "irb"
+  gem "pry"
+  gem "rake"
+  gem "rspec"
+  gem "rubocop"
+  gem "rubocop-rake"
+  gem "rubocop-rspec"
+  gem "webmock"
+end
