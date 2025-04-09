@@ -58,7 +58,13 @@ jobs:
 
       - name: Verify version match
         run: |
-          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          # Extract version from tag (works for both push and release triggers)
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            TAG_VERSION="${{ github.event.release.tag_name }}"
+          else
+            TAG_VERSION="${GITHUB_REF#refs/tags/v}"
+          fi
+          TAG_VERSION="${TAG_VERSION#v}"  # Remove 'v' prefix if present
           GEM_VERSION=$(ruby -r ./lib/keycloak_ruby/version.rb -e "puts KeycloakRuby::Version")
 
           echo "::group::Version Verification"
