@@ -54,7 +54,7 @@ jobs:
       - name: Verify release
         run: |
           TAG_VERSION=${GITHUB_REF#refs/tags/v}
-          GEM_VERSION=$(ruby -r ./lib/keycloak_ruby/version.rb -e "puts KeycloakRuby::VERSION")
+          GEM_VERSION=$(ruby -r ./lib/keycloak_ruby/version.rb -e "puts KeycloakRuby::Version")
 
           echo "::group::Version Verification"
           echo "Tag Version: $TAG_VERSION"
