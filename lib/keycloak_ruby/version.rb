@@ -21,7 +21,7 @@ module KeycloakRuby
     # Minor version number (backwards-compatible functionality)
     MINOR = 1
     # Patch version number (backwards-compatible bug fixes)
-    PATCH = 0
+    PATCH = 1
     # Pre-release version (nil for stable releases)
     PRE = nil
 
