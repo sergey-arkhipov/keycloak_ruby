@@ -25,7 +25,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: false
+          bundler-cache: true
+          bundler-cache-without: "development"
 
       - name: Fresh bundle install
         run: |
@@ -39,19 +40,23 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && github.event.action == 'published'
+    permissions:
+      id-token: write # Required for OIDC
+      contents: write # Needed for checkout
+
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }} # Checkout the release tag
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.4.1"
-          bundler-cache: false
+          bundler-cache: true
 
-      - name: Verify release
+      - name: Verify version match
         run: |
           TAG_VERSION=${GITHUB_REF#refs/tags/v}
           GEM_VERSION=$(ruby -r ./lib/keycloak_ruby/version.rb -e "puts KeycloakRuby::Version")
@@ -66,24 +71,7 @@ jobs:
             exit 1
           fi
 
-      - name: Configure Git
-        run: |
-          git config --global user.name "KeycloakRuby Release Bot"
-          git config --global user.email "keycloak-ruby-bot@users.noreply.github.com"
-
-      - name: Publish Gem
-        env:
-          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_TOKEN }}
-        run: |
-          # Build
-          gem build keycloak_ruby.gemspec
-
-          # Push (with error handling)
-          if ! gem push keycloak_ruby-*.gem --verbose; then
-            echo "::error::Failed to publish gem"
-            exit 1
-          fi
-
-          # Cleanup
-          rm -f keycloak_ruby-*.gem
-          echo "::notice::Build artifacts removed"
+      - name: Publish via Trusted Publishing
+        uses: rubygems/release-gem@v1
+        with:
+          gemspec-dir: "."
