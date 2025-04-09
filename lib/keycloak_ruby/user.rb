@@ -42,6 +42,33 @@ module KeycloakRuby
         client.find_users(search_string)
       end
 
+      # Finds a Keycloak user by email.
+      # If no user is found, creates a new user in Keycloak with the given attributes.
+      #
+      # @param user_attrs [Hash] A hash of user attributes. Must include:
+      #   :username [String] - the username for the user
+      #   :email [String] - the user's email address
+      #   :password [String] - the user's initial password
+      #   :temporary [Boolean] (optional) - whether the password should be temporary (default: true)
+      #
+      # @return [Hash] Result hash containing:
+      #   :user_data [Hash] - Keycloak user data (either found or newly created)
+      #   :created [Boolean] - true if the user was created, false if already existed
+      #
+      # @raise [KeycloakRuby::Errors::Error] if any request to Keycloak fails
+      def find_or_create(user_attrs = {})
+        user = find(user_attrs[:email]).find do |u|
+          u["email"].casecmp(user_attrs[:email]).zero?
+        end
+
+        if user
+          { user_data: user, created: false }
+        else
+          created_user = create(user_attrs)
+          { user_data: created_user, created: true }
+        end
+      end
+
       private
 
       # Provides a singleton instance of the KeycloakRuby::Client.
