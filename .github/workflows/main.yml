@@ -5,10 +5,12 @@ on:
     branches:
       - master
 
-  pull_request:
+  pull_request: {}
+  release:
+    types: [published] # Trigger on manual GitHub releases
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     name: Ruby ${{ matrix.ruby }}
     strategy:
@@ -25,3 +27,56 @@ jobs:
           bundler-cache: true
       - name: Run the default task
         run: bundle exec rake
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }} # Checkout the release tag
+          fetch-depth: 0
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4.1"
+          bundler-cache: true
+
+      - name: Verify release
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          GEM_VERSION=$(ruby -r ./lib/keycloak_ruby/version.rb -e "puts KeycloakRuby::VERSION")
+
+          echo "::group::Version Verification"
+          echo "Tag Version: $TAG_VERSION"
+          echo "Gem Version: $GEM_VERSION"
+          echo "::endgroup::"
+
+          if [ "$TAG_VERSION" != "$GEM_VERSION" ]; then
+            echo "::error::Version mismatch! Tag ($TAG_VERSION) ≠ Gem ($GEM_VERSION)"
+            exit 1
+          fi
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "KeycloakRuby Release Bot"
+          git config --global user.email "keycloak-ruby-bot@users.noreply.github.com"
+
+      - name: Publish Gem
+        env:
+          GEM_HOST_API_KEY: ${{ secrets.RUBYGEMS_API_TOKEN }}
+        run: |
+          # Build
+          gem build keycloak_ruby.gemspec
+
+          # Push (with error handling)
+          if ! gem push keycloak_ruby-*.gem --verbose; then
+            echo "::error::Failed to publish gem"
+            exit 1
+          fi
+
+          # Cleanup
+          rm -f keycloak_ruby-*.gem
+          echo "::notice::Build artifacts removed"
