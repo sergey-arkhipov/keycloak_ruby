@@ -20,12 +20,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
-          bundler-cache: true
-      - name: Run the default task
+          bundler-cache: false
+
+      - name: Fresh bundle install
+        run: |
+          bundle config unset frozen
+          bundle install --jobs 4 --retry 3
+
+      - name: Run tests
         run: bundle exec rake
 
   publish:
