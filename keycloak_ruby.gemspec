@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.metadata = {
     "homepage_uri" => "https://github.com/sergey-arkhipov/keycloak_ruby",
     "documentation_uri" => "https://github.com/sergey-arkhipov/keycloak_ruby/blob/master/README.md",
-    "changelog_uri" => "https://github.com/heartcombo/devise/blob/main/CHANGELOG.md",
+    "changelog_uri" => "https://github.com/sergey-arkhipov/keycloak_ruby/blob/main/CHANGELOG.md",
     "source_code_uri" => "https://github.com/sergey-arkhipov/keycloak_ruby",
     "bug_tracker_uri" => "https://github.com/sergey-arkhipov/keycloak_ruby/issues",
     "rubygems_mfa_required" => "true"
