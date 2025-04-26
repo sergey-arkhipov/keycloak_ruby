@@ -27,7 +27,6 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-          bundler-cache-without: "development"
 
       - name: Fresh bundle install
         run: |
