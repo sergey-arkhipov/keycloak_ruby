@@ -3,7 +3,7 @@
 require File.expand_path("lib/keycloak_ruby/version", __dir__)
 Gem::Specification.new do |spec|
   spec.name            = "keycloak_ruby"
-  spec.version         = KeycloakRuby::Version
+  spec.version         = KeycloakRuby::VERSION
   spec.summary         = "Keycloak authentication solution for Rails"
   spec.description     = "Library for using keycloak authentication with Rails"
   spec.authors         = ["Sergey Arkhipov", "Georgy Shcherbakov"]
@@ -20,10 +20,12 @@ Gem::Specification.new do |spec|
   end
 
   spec.require_paths = ["lib"]
+  spec.add_dependency "activesupport", ">= 8.0"
   spec.add_dependency "httparty", "~>0.23"
   spec.add_dependency "jwt", "~>2.10"
   spec.add_dependency "omniauth", "~>2.1"
   spec.add_dependency "omniauth_openid_connect", "~>0.8"
+  spec.add_dependency "zeitwerk", "~>2.7"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

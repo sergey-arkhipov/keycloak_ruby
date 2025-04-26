@@ -1,62 +1,56 @@
 # frozen_string_literal: true
 
 # lib/keycloak_ruby/version.rb
-# Module for interacting with Keycloak
 module KeycloakRuby
-  # Version module following Semantic Versioning 2.0 guidelines
-  # Provides detailed version information and helper methods
+  # The current version of the KeycloakRuby gem as a string.
+  # Follows Semantic Versioning 2.0 (https://semver.org)
+  # @example
+  #   KeycloakRuby::VERSION # => "0.1.1"
+  VERSION = "0.1.1"
+
+  # Provides version information and comparison methods for the KeycloakRuby gem.
+  # This module follows Semantic Versioning 2.0 guidelines.
   #
   # @example Getting version information
-  #   KeycloakRuby::Version::VERSION      # => "0.1.0"
-  #   KeycloakRuby::Version.to_a          # => [0, 1, 0]
-  #   KeycloakRuby::Version.to_h          # => { major: 0, minor: 1, patch: 0, pre: nil }
-  #   KeycloakRuby.version                # => "0.1.0"
+  #   KeycloakRuby::Version.to_a    # => [0, 1, 1]
+  #   KeycloakRuby::Version.to_h    # => { major: 0, minor: 1, patch: 1 }
+  #   KeycloakRuby::Version.to_s    # => "0.1.1"
   #
-  # @example Checking version
-  #   KeycloakRuby::Version >= '0.1.0'    # => true
-  # Module for work with Version
+  # @example Version comparison
+  #   KeycloakRuby::Version >= '0.1.0'  # => true
+  #   KeycloakRuby::Version >= '1.0.0'  # => false
   module Version
-    # Major version number (incompatible API changes)
-    MAJOR = 0
-    # Minor version number (backwards-compatible functionality)
-    MINOR = 1
-    # Patch version number (backwards-compatible bug fixes)
-    PATCH = 1
-    # Pre-release version (nil for stable releases)
-    PRE = nil
-
-    # Full version string
-    VERSION = [MAJOR, MINOR, PATCH, PRE].compact.join(".").freeze
-
-    # Returns version components as an array
-    # @return [Array<Integer, Integer, Integer, String|nil>]
+    # Returns the version components as an array of integers
+    # @return [Array<Integer>] the version components [major, minor, patch]
+    # @example
+    #   KeycloakRuby::Version.to_a # => [0, 1, 1]
     def self.to_a
-      [MAJOR, MINOR, PATCH, PRE]
+      VERSION.split(".").map(&:to_i)
     end
 
-    # Returns version components as a hash
-    # @return [Hash<Symbol, Integer|String|nil>]
+    # Returns the version components as a hash with symbols
+    # @return [Hash<Symbol, Integer>] the version components {major:, minor:, patch:}
+    # @example
+    #   KeycloakRuby::Version.to_h # => { major: 0, minor: 1, patch: 1 }
     def self.to_h
-      { major: MAJOR, minor: MINOR, patch: PATCH, pre: PRE }
+      { major: to_a[0], minor: to_a[1], patch: to_a[2] }
     end
 
-    # Compares version with another version string
-    # @param version_string [String] version to compare with (e.g., "1.2.3")
-    # @return [Boolean]
+    # Compares the current version with another version string
+    # @param version_string [String] the version to compare with (e.g. "1.2.3")
+    # @return [Boolean] true if current version is greater or equal
+    # @example
+    #   KeycloakRuby::Version >= '0.1.0' # => true
     def self.>=(version_string)
       Gem::Version.new(VERSION) >= Gem::Version.new(version_string)
     end
 
-    # Returns the full version string
-    # @return [String]
+    # Returns the version string
+    # @return [String] the version string
+    # @example
+    #   KeycloakRuby::Version.to_s # => "0.1.1"
     def self.to_s
       VERSION
     end
-  end
-
-  # Returns the current gem version
-  # @return [String]
-  def self.version
-    Version::VERSION
   end
 end

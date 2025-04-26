@@ -1,23 +1,20 @@
 # frozen_string_literal: true
 
+# lib/keycloak_ruby.rb
 require "omniauth"
 require "omniauth_openid_connect"
 require "httparty"
 require "jwt"
+require "zeitwerk"
 
-# lib/keycloak_ruby.rb
+loader = Zeitwerk::Loader.for_gem
+loader.ignore(
+  "#{__dir__}/generators",
+  "#{__dir__}/templates"
+)
+loader.setup
+
 require "generators/keycloak_ruby/install_generator" if defined?(Rails)
-require "keycloak_ruby/authentication"
-require "keycloak_ruby/client"
-require "keycloak_ruby/config"
-require "keycloak_ruby/errors"
-require "keycloak_ruby/request_params"
-require "keycloak_ruby/request_performer"
-require "keycloak_ruby/response_validator"
-require "keycloak_ruby/token_refresher"
-require "keycloak_ruby/token_service"
-require "keycloak_ruby/user"
-require "keycloak_ruby/version"
 
 # Module for interacting with Keycloak
 module KeycloakRuby
@@ -56,8 +53,6 @@ module KeycloakRuby
       config.validate!
     end
   end
-  VERSION = Version::VERSION
-  # Only load test helpers when in test environment
   # Load test helpers only in test environment
   if ENV["RACK_ENV"] == "test" || ENV["RAILS_ENV"] == "test" || defined?(RSpec) || defined?(Minitest)
     require "keycloak_ruby/testing"
