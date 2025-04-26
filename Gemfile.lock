@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    keycloak_ruby (0.1.1)
+    keycloak_ruby (0.1.2)
       activesupport (>= 8.0)
       httparty (~> 0.23)
       jwt (~> 2.10)
