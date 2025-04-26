@@ -88,7 +88,7 @@ module KeycloakRuby
       {
         "Content-Type" => "application/x-www-form-urlencoded",
         "Accept" => "application/json",
-        "User-Agent" => "KeycloakRuby/#{KeycloakRuby::Version::VERSION}"
+        "User-Agent" => "KeycloakRuby/#{KeycloakRuby::VERSION}"
       }
     end
 

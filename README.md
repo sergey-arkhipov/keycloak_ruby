@@ -7,6 +7,9 @@ This library is designed to use Keycloak identification in Rails application
 Add to Gemfile
 
 ```bash
+# stable version
+gem "keycloak_ruby"
+# latest master
 gem "keycloak_ruby", git: "https://github.com/sergey-arkhipov/keycloak_ruby.git"
 
 ```
@@ -17,7 +20,12 @@ Create initializer for omniauth manually or use generator (config/initializers/o
 rails generate keycloak_ruby:install
 ```
 
-Now under active development, so you need create manually:
+Now under active development, so you need create controller and routes manually:
+
+- include `KeycloakRuby::Authentication` in ApplicationController
+- create `SeesionController`
+- add routes to `routes.rb
+`
 
 ```ruby
 # ApplicationController
@@ -54,7 +62,7 @@ delete '/logout', to: 'sessions#destroy', as: :logout
 
 ```
 
-It is assumed that you have a User model in Rails app
+It is assumed that you have a `User` model in Rails app
 
 ### Configuration Warning
 
@@ -65,17 +73,17 @@ If any variable is missing, the application may crash at boot time with one of t
 - `KeyError` - when using `ENV.fetch(...)` without a fallback default;
 - `KeycloakRuby::Errors::ConfigurationError` - when a required value is `nil` or blank after config evaluation.
 
-This issue can happen  when building Docker images. To avoid this, **use safe defaults** via `ENV.fetch('VAR', 'fallback')`:
+This issue can happen when building Docker images. To avoid this, **use safe defaults** via `ENV.fetch('VAR', 'fallback')`:
 
 ```yaml
 production:
-   keycloak_url: <%= ENV.fetch('KEYCLOAK_URL', 'https://keycloak.example.com') %>
-   app_host: <%= ENV.fetch('DEFAULT_APP_HOST', 'https://app.example.com') %>
-   realm: <%= ENV.fetch('KEYCLOAK_REALM', 'my-realm') %>
-   admin_client_id: <%= ENV.fetch('KEYCLOAK_ADMIN_CLIENT_ID', 'admin-cli') %>
-   admin_client_secret: <%= ENV.fetch('KEYCLOAK_ADMIN_CLIENT_SECRET', 'changeme') %>
-   oauth_client_id: <%= ENV.fetch('KEYCLOAK_OAUTH_CLIENT_ID', 'my-client') %>
-   oauth_client_secret: <%= ENV.fetch('KEYCLOAK_OAUTH_CLIENT_SECRET', 'secret') %>
+  keycloak_url: <%= ENV.fetch('KEYCLOAK_URL', 'https://keycloak.example.com') %>
+  app_host: <%= ENV.fetch('DEFAULT_APP_HOST', 'https://app.example.com') %>
+  realm: <%= ENV.fetch('KEYCLOAK_REALM', 'my-realm') %>
+  admin_client_id: <%= ENV.fetch('KEYCLOAK_ADMIN_CLIENT_ID', 'admin-cli') %>
+  admin_client_secret: <%= ENV.fetch('KEYCLOAK_ADMIN_CLIENT_SECRET', 'changeme') %>
+  oauth_client_id: <%= ENV.fetch('KEYCLOAK_OAUTH_CLIENT_ID', 'my-client') %>
+  oauth_client_secret: <%= ENV.fetch('KEYCLOAK_OAUTH_CLIENT_SECRET', 'secret') %>
 ```
 
 ## Architecture Overview
@@ -167,13 +175,9 @@ sequenceDiagram
 
 ```
 
-## Test
+## Testing in application
 
 For test purpose there mock helper sign_in(user)
 
 - add `require "keycloak_ruby/testing/keycloak_helpers"` to keycloak_helper.rb
 - add sign_in in tests `config.include KeycloakRuby::Testing::KeycloakHelpers`
-
-```
-
-```

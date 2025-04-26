@@ -2,10 +2,12 @@ PATH
   remote: .
   specs:
     keycloak_ruby (0.1.1)
+      activesupport (>= 8.0)
       httparty (~> 0.23)
       jwt (~> 2.10)
       omniauth (~> 2.1)
       omniauth_openid_connect (~> 0.8)
+      zeitwerk (~> 2.7)
 
 GEM
   remote: https://rubygems.org/
@@ -220,6 +222,7 @@ GEM
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    zeitwerk (2.7.2)
 
 PLATFORMS
   ruby

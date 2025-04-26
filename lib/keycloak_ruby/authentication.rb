@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 # lib/keycloak_ruby/authentication.rb
+require "active_support/concern"
 module KeycloakRuby
   # Concern to add methods to ApplicationController
   module Authentication

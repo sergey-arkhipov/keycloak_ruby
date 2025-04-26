@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require "active_support"
+require "active_support/concern"
 require "keycloak_ruby"
 require "debug"
 require "webmock/rspec"
+require "zeitwerk"
 WebMock.disable_net_connect!(allow_localhost: true)
 
 Dir[File.join(__dir__, "support", "**", "*.rb")].each { |f| require f }
