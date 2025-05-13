@@ -183,7 +183,7 @@ GEM
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
       rack (>= 3.0.0, < 4)
-    rack-session (2.1.0)
+    rack-session (2.1.1)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
     rack-test (2.2.0)
@@ -266,7 +266,6 @@ GEM
     zeitwerk (2.7.2)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
