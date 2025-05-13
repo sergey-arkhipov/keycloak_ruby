@@ -20,8 +20,12 @@ module KeycloakRuby
     end
 
     # Store token
+    # :reek:DuplicateMethodCall
+    # :reek:FeatureEnvy
     def store_tokens(data)
-      @session[:access_token] = extract_access_token(data)
+      # It's necessary, because omniauth return request.env["omniauth.auth"] as 'token', not 'access_token'
+
+      @session[:access_token] = data["token"] || data["access_token"]
       @session[:refresh_token] = data["refresh_token"] if data["refresh_token"]
       @session[:id_token] = data["id_token"] if data["id_token"]
     end
@@ -33,9 +37,6 @@ module KeycloakRuby
     private
 
     # It's necessary, because omniauth return request.env["omniauth.auth"] as 'token', not 'access_token'
-    def extract_access_token(data)
-      data["token"] || data["access_token"]
-    end
 
     # Gets current token or attempts refresh if expired
     # @return [Hash, nil] Decoded token claims
@@ -52,6 +53,7 @@ module KeycloakRuby
 
     # Decodes JWT token
     # @raise [Errors::TokenExpired, Errors::TokenInvalid]
+    # :reek:DuplicateMethodCall
     def decode_token(token)
       options = jwt_decode_options
 

@@ -8,7 +8,9 @@ RSpec::Core::RakeTask.new(:spec) do |task|
 end
 
 require "rubocop/rake_task"
-
 RuboCop::RakeTask.new
 
-task default: %i[spec rubocop]
+require "reek/rake/task"
+Reek::Rake::Task.new
+
+task default: %i[spec rubocop reek]

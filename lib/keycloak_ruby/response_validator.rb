@@ -85,15 +85,16 @@ module KeycloakRuby
     # Raises appropriate validation error based on failure reason
     # @raise [KeycloakRuby::Errors::TokenRefreshFailed]
     def raise_validation_error # rubocop:disable Metrics/MethodLength
+      error_description = @data["error_description"]
       if !valid_http_status?
         raise Errors::TokenRefreshFailed,
               "Keycloak API request failed with status #{@response.code}: #{extract_error_message}"
       elsif invalid_grant?
         raise Errors::TokenRefreshFailed,
-              "Invalid grant: #{@data["error_description"] || "Refresh token invalid or expired"}"
+              "Invalid grant: #{error_description || "Refresh token invalid or expired"}"
       elsif error_present?
         raise Errors::TokenRefreshFailed,
-              "Keycloak error: #{@data["error"]} - #{@data["error_description"]}"
+              "Keycloak error: #{@data["error"]} - #{error_description}"
       else
         raise Errors::TokenRefreshFailed,
               "Invalid response: access token missing from response"
@@ -103,10 +104,12 @@ module KeycloakRuby
     # Extracts error message from response
     # @return [String]
     def extract_error_message
-      if @data["error_description"]
-        @data["error_description"]
-      elsif @response.body.length < 100 # Prevent huge error messages
-        @response.body
+      error_description = @data["error_description"]
+      response_body = @response.body
+      if error_description
+        error_description
+      elsif response_body.length < 100 # Prevent huge error messages
+        response_body
       else
         "See response body for details"
       end

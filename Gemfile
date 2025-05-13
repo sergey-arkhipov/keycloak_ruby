@@ -13,6 +13,7 @@ group :development, :test do
   gem "irb"
   gem "pry"
   gem "rake"
+  gem "reek"
   gem "rspec"
   gem "rubocop"
   gem "rubocop-rake"
