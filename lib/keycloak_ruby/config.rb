@@ -39,6 +39,10 @@ module KeycloakRuby
       oauth_client_id
       oauth_client_secret
     ].freeze
+
+    # Default environment
+    DEFAULT_ENV = "development"
+
     # :reek:Attribute
     attr_accessor :keycloak_url,
                   :app_host,
@@ -91,7 +95,6 @@ module KeycloakRuby
     private
 
     # Loads configuration from YAML file if it exists
-    # :reek:ManualDispatch
     def load_config
       return unless File.exist?(@config_path)
 
@@ -102,16 +105,31 @@ module KeycloakRuby
 
     def load_yaml_file
       YAML.safe_load(ERB.new(File.read(@config_path)).result, aliases: true)
+    rescue Errno::ENOENT, Psych::SyntaxError => e
+      raise Errors::ConfigurationError, "Failed to load YAML from #{@config_path}: #{e.message}"
     end
 
+    # Determines current environment
+    #
+    # @return [String] Current environment name
+    # @api private
     def current_env
-      defined?(Rails) ? Rails.env : ENV["APP_ENV"] || "development"
+      @current_env ||= (defined?(Rails) && Rails.env) || ENV["APP_ENV"] || DEFAULT_ENV
     end
 
+    # Applies configuration from hash
+    #
+    # @param config_hash [Hash] Configuration key-value pairs
+    # @api private
     def apply_config(config_hash)
       config_hash.each do |key, value|
         setter = :"#{key}="
-        public_send(setter, value) if respond_to?(setter)
+        begin
+          public_send(setter, value)
+        rescue NoMethodError
+          # Silently ignore unknown configuration keys
+          next
+        end
       end
     end
   end

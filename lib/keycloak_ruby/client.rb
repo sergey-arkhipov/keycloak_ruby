@@ -44,7 +44,7 @@ module KeycloakRuby
     # @raise [KeycloakRuby::Errors::UserCreationError] If user creation fails.
     # @return [Hash] The newly created user's data.
     def create_user(user_attrs = {})
-      user_data = build_user_data(user_attrs)
+      user_data = self.class.build_user_data(user_attrs)
 
       response = http_request(
         http_method: :post,
@@ -112,6 +112,29 @@ module KeycloakRuby
       update_redirect_uris_for(client_record["id"], redirect_uris)
     end
 
+    def self.build_user_data(attrs)
+      { username: attrs.fetch(:username), email: attrs.fetch(:email), enabled: true,
+        credentials: [
+          {
+            type: "password",
+            value: attrs.fetch(:password),
+            temporary: attrs.fetch(:temporary, true)
+          }
+        ] }
+    end
+
+    def self.build_request_params(opts)
+      RequestParams.new(
+        http_method: opts.fetch(:http_method),
+        url: opts.fetch(:url),
+        headers: opts.fetch(:headers, {}),
+        body: opts.fetch(:body, nil),
+        success_codes: opts.fetch(:success_codes, [200]),
+        error_class: opts.fetch(:error_class, KeycloakRuby::Errors::APIError),
+        error_message: opts.fetch(:error_message, "Request failed")
+      )
+    end
+
     private
 
     def build_auth_body(username, password)
@@ -124,33 +147,10 @@ module KeycloakRuby
       }
     end
 
-    def build_user_data(attrs)
-      { username: attrs.fetch(:username), email: attrs.fetch(:email), enabled: true,
-        credentials: [
-          {
-            type: "password",
-            value: attrs.fetch(:password),
-            temporary: attrs.fetch(:temporary, true)
-          }
-        ] }
-    end
-
     # Builds RequestParams and passes them to the RequestPerformer.
     def http_request(options = {})
-      params = build_request_params(options)
+      params = self.class.build_request_params(options)
       @request_performer.call(params)
-    end
-
-    def build_request_params(opts)
-      RequestParams.new(
-        http_method: opts.fetch(:http_method),
-        url: opts.fetch(:url),
-        headers: opts.fetch(:headers, {}),
-        body: opts.fetch(:body, nil),
-        success_codes: opts.fetch(:success_codes, [200]),
-        error_class: opts.fetch(:error_class, KeycloakRuby::Errors::APIError),
-        error_message: opts.fetch(:error_message, "Request failed")
-      )
     end
 
     # Retrieves client details by its "clientId".
