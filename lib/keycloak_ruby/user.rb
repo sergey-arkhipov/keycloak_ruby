@@ -57,8 +57,9 @@ module KeycloakRuby
       #
       # @raise [KeycloakRuby::Errors::Error] if any request to Keycloak fails
       def find_or_create(user_attrs = {})
-        users = find(user_attrs[:email])
-        user = users.detect { |u| u["email"].casecmp?(user_attrs[:email]) }
+        user_email = user_attrs[:email]
+        users = find(user_email)
+        user = users.detect { |user| user["email"].casecmp?(user_email) }
 
         if user
           { user_data: user, created: false }

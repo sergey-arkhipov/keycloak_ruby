@@ -56,32 +56,31 @@ module KeycloakRuby
       private
 
       def mock_keycloak_login(user, use_capybara: true)
-        OmniAuth.config.test_mode = true
+        config = OmniAuth.config
+        config.test_mode = true
         token_data = generate_fake_tokens(user)
-        OmniAuth.config.mock_auth[:keycloak] = token_data
+        config.mock_auth[:keycloak] = token_data
 
-        if use_capybara
-          capybara_login
-        else
-          store_session(token_data.credentials)
-        end
+        use_capybara ? capybara_login : store_session(token_data.credentials)
       end
 
       def capybara_login
         visit "/login"
-        click_on I18n.t("user.login") if page.has_button? I18n.t("user.login")
+        translated_login_link = I18n.t("user.login")
+        click_on translated_login_link if page.has_button? translated_login_link
       end
 
       def generate_fake_tokens(user)
         email = user.email
-        token_payload = { "email" => email, "exp" => 2.hours.from_now.to_i }
+        expired_time =  2.hours.from_now.to_i
+        token_payload = { "email" => email, "exp" => expired_time }
 
         OmniAuth::AuthHash.new(provider: "keycloak", uid: "uid-#{email}", info: { email: email },
                                credentials: OmniAuth::AuthHash.new(
                                  token: JWT.encode(token_payload, nil, "none"),
                                  refresh_token: "fake-refresh-#{email}",
                                  id_token: "fake-id-#{email}",
-                                 expires_at: 2.hours.from_now.to_i
+                                 expires_at: expired_time
                                ))
       end
 
@@ -118,6 +117,7 @@ if defined?(RSpec)
   end
 elsif defined?(Minitest)
   module Minitest
+    # Include helpers in minitest module
     class Test
       include KeycloakRuby::Testing::KeycloakHelpers
     end

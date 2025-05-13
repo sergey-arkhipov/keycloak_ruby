@@ -1,0 +1,9 @@
+detectors:
+  UncommunicativeVariableName:
+    accept:
+      - e
+  TooManyStatements:
+    enabled: true
+    exclude:
+      - initialize
+    max_statements: 8

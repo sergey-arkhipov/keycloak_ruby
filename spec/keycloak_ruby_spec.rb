@@ -3,6 +3,8 @@
 require "spec_helper"
 
 RSpec.describe KeycloakRuby do
+  subject(:keycloak) { described_class } # Именованный subject для модуля
+
   let(:expected_constants) do
     %w[
       Authentication
@@ -44,5 +46,27 @@ RSpec.describe KeycloakRuby do
                             .reject { |c| %w[VERSION Testing].include?(c) }
 
     expect(loaded).to match_array(expected_constants)
+  end
+
+  describe "#logger" do
+    before do
+      keycloak.instance_variable_set(:@logger, nil) # Сбрасываем мемоизацию
+    end
+
+    it "returns Rails.logger when available" do
+      rails_logger = Logger.new($stdout)
+      allow(Rails).to receive(:logger).and_return(rails_logger)
+      expect(keycloak.logger).to eq(rails_logger)
+    end
+
+    it "creates a default logger when Rails is not defined" do
+      hide_const("Rails") # Удаляем константу Rails
+      expect(keycloak.logger).to be_a(Logger)
+    end
+
+    it "sets default logger level to INFO when Rails is not defined" do
+      hide_const("Rails") # Удаляем константу Rails
+      expect(keycloak.logger.level).to eq(Logger::INFO)
+    end
   end
 end

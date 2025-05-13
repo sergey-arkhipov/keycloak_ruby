@@ -6,7 +6,8 @@ require "omniauth_openid_connect"
 require "httparty"
 require "jwt"
 require "zeitwerk"
-
+require "omniauth/rails_csrf_protection/version"
+require "omniauth/rails_csrf_protection/railtie" if defined?(Rails)
 loader = Zeitwerk::Loader.for_gem
 loader.ignore(
   "#{__dir__}/generators",
@@ -24,15 +25,11 @@ module KeycloakRuby
     # Defaults to Rails.logger if available, or a standard Logger.
     #
     # @return [Logger]
+    # :reek:Attribute
     attr_writer :logger
 
     def logger
-      @logger ||= if defined?(Rails) && Rails.respond_to?(:logger) && Rails.logger
-                    Rails.logger
-                  else
-                    require "logger"
-                    Logger.new($stdout).tap { |log| log.level = Logger::INFO }
-                  end
+      @logger ||= resolve_logger
     end
 
     # Returns the singleton configuration object. The configuration is
@@ -51,6 +48,31 @@ module KeycloakRuby
     def configure
       yield config
       config.validate!
+    end
+
+    private
+
+    def resolve_logger
+      if rails_defined? && rails_logger
+        rails_logger
+      else
+        default_logger
+      end
+    end
+
+    def rails_defined?
+      defined?(Rails)
+    end
+
+    def rails_logger
+      Rails.logger if rails_defined?
+    rescue NoMethodError
+      nil
+    end
+
+    def default_logger
+      require "logger"
+      Logger.new($stdout).tap { |log| log.level = Logger::INFO }
     end
   end
   # Load test helpers only in test environment

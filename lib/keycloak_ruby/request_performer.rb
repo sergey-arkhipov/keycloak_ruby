@@ -21,27 +21,21 @@ module KeycloakRuby
     # @raise [request_params.error_class] If the response code is not in success_codes
     #   or HTTParty raises an error.
     def call(request_params)
-      # To reduce FeatureEnvy, extract local variables
-      http_method   = request_params.http_method
-      url           = request_params.url
-      headers       = request_params.headers
-      body          = request_params.body
-
-      response = HTTParty.send(http_method, url, headers: headers, body: body)
+      request_options = request_params.to_h.slice(:headers, :body)
+      response = HTTParty.send(request_params.http_method, request_params.url, **request_options)
       verify_response!(response, request_params)
       response
     rescue HTTParty::Error => e
-      KeycloakRuby.logger.error("#{request_params.error_message} (HTTParty error): #{e.message}")
-      raise request_params.error_class, e.message
+      message = e.message
+      KeycloakRuby.logger.error("#{request_params.error_message} (HTTParty error): #{message}")
+      raise request_params.error_class, message
     end
 
     private
 
     # Safe validation: returns true/false
-    def verify_response(response, request_params)
-      code          = response.code
-      success_codes = request_params.success_codes
-
+    # :reek:UtilityFunction
+    def verify_response(code, success_codes)
       case success_codes
       when Range
         success_codes.cover?(code)
@@ -54,12 +48,13 @@ module KeycloakRuby
 
     # Bang version that raises an error on invalid response
     def verify_response!(response, request_params)
-      return if verify_response(response, request_params)
+      code = response.code
+      return if verify_response(code, request_params.success_codes)
 
-      code          = response.code
-      error_message = request_params.error_message
-      KeycloakRuby.logger.error("#{error_message}: #{code} => #{response.body}")
-      raise request_params.error_class, "#{error_message}: #{code} => #{response.body}"
+      message = request_params.error_message
+      body = response.body
+      KeycloakRuby.logger.error("#{message}: #{code} => #{body}")
+      raise request_params.error_class, "#{message}: #{code} => #{body}"
     end
   end
 end
