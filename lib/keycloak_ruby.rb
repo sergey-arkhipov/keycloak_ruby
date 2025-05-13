@@ -6,7 +6,8 @@ require "omniauth_openid_connect"
 require "httparty"
 require "jwt"
 require "zeitwerk"
-
+require "omniauth/rails_csrf_protection/version"
+require "omniauth/rails_csrf_protection/railtie" if defined?(Rails)
 loader = Zeitwerk::Loader.for_gem
 loader.ignore(
   "#{__dir__}/generators",
