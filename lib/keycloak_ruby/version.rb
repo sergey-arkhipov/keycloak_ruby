@@ -5,8 +5,8 @@ module KeycloakRuby
   # The current version of the KeycloakRuby gem as a string.
   # Follows Semantic Versioning 2.0 (https://semver.org)
   # @example
-  #   KeycloakRuby::VERSION # => "0.1.2"
-  VERSION = "0.1.2"
+  #   KeycloakRuby::VERSION # => "0.1.3"
+  VERSION = "0.1.3"
 
   # Provides version information and comparison methods for the KeycloakRuby gem.
   # This module follows Semantic Versioning 2.0 guidelines.
