@@ -7,6 +7,7 @@ module KeycloakRuby
   # and validating the response. This class helps to reduce
   # FeatureEnvy and keep the Client code cleaner.
   # :reek:FeatureEnvy
+  # :reek:MissingSafeMethod { exclude: [ verify_response! ] }
   class RequestPerformer
     def initialize(config)
       @config = config
@@ -35,7 +36,7 @@ module KeycloakRuby
 
     # Safe validation: returns true/false
     # :reek:UtilityFunction
-    def verify_response(code, success_codes)
+    def response_valid?(code, success_codes)
       case success_codes
       when Range
         success_codes.cover?(code)
@@ -49,7 +50,7 @@ module KeycloakRuby
     # Bang version that raises an error on invalid response
     def verify_response!(response, request_params)
       code = response.code
-      return if verify_response(code, request_params.success_codes)
+      return if response_valid?(code, request_params.success_codes)
 
       message = request_params.error_message
       body = response.body

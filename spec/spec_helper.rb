@@ -22,6 +22,7 @@ unless defined?(Rails)
     end
 
     # Only define Application if needed for other tests
+    # :reek:UtilityFunction
     class Application
       def env
         Rails.env

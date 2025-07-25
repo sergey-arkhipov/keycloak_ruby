@@ -32,7 +32,7 @@ module KeycloakRuby
 
     # Safe validation - returns boolean instead of raising exceptions
     # @return [Boolean] true if response is valid, false otherwise
-    def validate
+    def validate # rubocop:disable Naming/PredicateMethod
       return false unless valid_http_status?
       return false if invalid_grant?
       return false if error_present?
