@@ -2,11 +2,11 @@ PATH
   remote: .
   specs:
     keycloak_ruby (0.1.4)
-      activesupport (>= 8.0)
+      activesupport (>= 8.1)
       httparty (~> 0.23)
       jwt (~> 2.10)
       omniauth (~> 2.1)
-      omniauth-rails_csrf_protection (~> 1.0.2)
+      omniauth-rails_csrf_protection (~> 2.0.1)
       omniauth_openid_connect (~> 0.8)
       zeitwerk (~> 2.7)
 
@@ -173,7 +173,7 @@ GEM
       logger
       rack (>= 2.2.3)
       rack-protection
-    omniauth-rails_csrf_protection (1.0.2)
+    omniauth-rails_csrf_protection (2.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     omniauth_openid_connect (0.8.0)
