@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email           = %w[sergey-arkhipov@ya.ru lordsynergymail@gmail.com]
   spec.homepage        = "https://github.com/sergey-arkhipov/keycloak_ruby"
   spec.license         = "MIT"
-  spec.required_ruby_version = ">= 3.3"
+  spec.required_ruby_version = ">= 4.0.0"
   gemspec = File.basename(__FILE__)
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
     ls.readlines("\x0", chomp: true).reject do |f|
