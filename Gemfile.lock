@@ -3,10 +3,10 @@ PATH
   specs:
     keycloak_ruby (0.1.4)
       activesupport (>= 8.1)
-      httparty (~> 0.23)
-      jwt (~> 2.10)
+      httparty (~> 0.24)
+      jwt (~> 3.1)
       omniauth (~> 2.1)
-      omniauth-rails_csrf_protection (~> 2.0.1)
+      omniauth-rails_csrf_protection (~> 2.0)
       omniauth_openid_connect (~> 0.8)
       zeitwerk (~> 2.7)
 
@@ -130,7 +130,7 @@ GEM
       bindata
       faraday (~> 2.0)
       faraday-follow_redirects
-    jwt (2.10.2)
+    jwt (3.1.2)
       base64
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
@@ -384,7 +384,7 @@ CHECKSUMS
   irb (1.16.0) sha256=2abe56c9ac947cdcb2f150572904ba798c1e93c890c256f8429981a7675b0806
   json (2.18.0) sha256=b10506aee4183f5cf49e0efc48073d7b75843ce3782c68dbeb763351c08fd505
   json-jwt (1.17.0) sha256=6ff99026b4c54281a9431179f76ceb81faa14772d710ef6169785199caadc4cc
-  jwt (2.10.2) sha256=31e1ee46f7359883d5e622446969fe9c118c3da87a0b1dca765ce269c3a0c4f4
+  jwt (3.1.2) sha256=af6991f19a6bb4060d618d9add7a66f0eeb005ac0bc017cd01f63b42e122d535
   keycloak_ruby (0.1.4)
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
