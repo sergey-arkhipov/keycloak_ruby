@@ -11,7 +11,6 @@ group :development, :test do
   gem "byebug"
   gem "debug"
   gem "irb"
-  gem "pry"
   gem "rake"
   gem "reek"
   gem "rspec"
