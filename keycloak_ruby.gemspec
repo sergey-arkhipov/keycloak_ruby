@@ -21,11 +21,11 @@ Gem::Specification.new do |spec|
 
   spec.require_paths = ["lib"]
   spec.add_dependency "activesupport", ">= 8.1"
-  spec.add_dependency "httparty", "~>0.23"
-  spec.add_dependency "jwt", "~>2.10"
+  spec.add_dependency "httparty", "~>0.24"
+  spec.add_dependency "jwt", "~>3.1"
   spec.add_dependency "omniauth", "~>2.1"
   spec.add_dependency "omniauth_openid_connect", "~>0.8"
-  spec.add_dependency "omniauth-rails_csrf_protection", "~>2.0.1"
+  spec.add_dependency "omniauth-rails_csrf_protection", "~>2.0"
   spec.add_dependency "zeitwerk", "~>2.7"
 
   # For more information and examples about making a new gem, check out our
