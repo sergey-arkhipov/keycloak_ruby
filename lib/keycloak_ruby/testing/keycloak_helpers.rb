@@ -4,16 +4,29 @@
 # :reek:UtilityFunction :reek:ControlParameter :reek:ManualDispatch :reek:BooleanParameter :reek:LongParameterList
 module KeycloakRuby
   module Testing
-    # Helper module for tests with Keycloak
+    # Хелперы для тестов с Keycloak
     module KeycloakHelpers
-      # Combines both sign-in approaches with automatic detection of test type
+      # Быстрый вход: для браузерных тестов (:feature/:system) устанавливает сессию
+      # через middleware без прохождения OmniAuth. Для остальных — мокирует TokenService.
+      # Если нужна полная процедура входа, используйте full_sign_in.
       def sign_in(user, test_type: auto_detect_test_type)
+        case test_type
+        when :feature, :system
+          visit "/__test_login__/#{user.id}"
+        else
+          mock_token_service(user)
+        end
+      end
+
+      # Полная процедура входа через OmniAuth для тестов, которые проверяют сам логин.
+      # Проходит /login → OmniAuth callback → SessionsController#create.
+      def full_sign_in(user, test_type: auto_detect_test_type)
         case test_type
         when :request
           mock_token_service(user)
         when :feature, :system
           mock_keycloak_login(user, use_capybara: true)
-        else # :controller, :view, etc.
+        else
           mock_keycloak_login(user, use_capybara: false)
         end
       end
@@ -31,9 +44,9 @@ module KeycloakRuby
         user_data
       end
 
-      # Delete all users from Keycloak
+      # Удаление всех пользователей из Keycloak
       def self.delete_all_keycloak_users
-        users = KeycloakRuby::User.find("") # Empty search string to find all users
+        users = KeycloakRuby::User.find("") # Пустая строка — ищем всех
         users.each do |user|
           KeycloakRuby::User.delete_by_id(user["id"])
         end
@@ -110,14 +123,14 @@ module KeycloakRuby
     end
   end
 end
-# Automatically include in common test frameworks
+# Автоматическое подключение хелперов в тестовые фреймворки
 if defined?(RSpec)
   RSpec.configure do |config|
     config.include KeycloakRuby::Testing::KeycloakHelpers
   end
 elsif defined?(Minitest)
   module Minitest
-    # Include helpers in minitest module
+    # Подключение хелперов в Minitest
     class Test
       include KeycloakRuby::Testing::KeycloakHelpers
     end

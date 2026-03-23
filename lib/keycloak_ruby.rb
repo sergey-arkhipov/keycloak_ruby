@@ -16,6 +16,7 @@ loader.ignore(
 loader.setup
 
 require "generators/keycloak_ruby/install_generator" if defined?(Rails)
+require "keycloak_ruby/railtie" if defined?(Rails::Railtie)
 
 # Module for interacting with Keycloak
 module KeycloakRuby
