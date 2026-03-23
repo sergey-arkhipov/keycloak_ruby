@@ -9,7 +9,7 @@ module KeycloakRuby
     # Используется хелпером sign_in для браузерных тестов (:feature/:system).
     #
     # Было:  visit /login → рендер HTML → клик → OmniAuth → SessionsController → редирект
-    # Стало: visit /__test_login__/123 → запись сессии → 204 No Content
+    # Стало: visit /__test_login__/123 → запись сессии → 200 OK
     class LoginMiddleware
       TEST_LOGIN_PATH = %r{\A/__test_login__/(\d+)\z}
 
@@ -29,6 +29,13 @@ module KeycloakRuby
 
       def handle_test_login(env, user_id)
         user = ::User.find(user_id)
+        fill_session(env, user)
+        [200, { "Content-Type" => "text/plain" }, ["Logged in"]]
+      rescue ActiveRecord::RecordNotFound
+        [404, { "Content-Type" => "text/plain" }, ["Test login failed: User #{user_id} not found"]]
+      end
+
+      def fill_session(env, user)
         email = user.email
         expired_time = 2.hours.from_now.to_i
         token_payload = { "email" => email, "exp" => expired_time }
@@ -37,8 +44,6 @@ module KeycloakRuby
         session[:access_token] = JWT.encode(token_payload, nil, "none")
         session[:refresh_token] = "fake-refresh-#{email}"
         session[:id_token] = "fake-id-#{email}"
-
-        [204, {}, []]
       end
     end
   end
