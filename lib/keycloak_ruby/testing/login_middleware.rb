@@ -35,6 +35,7 @@ module KeycloakRuby
         [404, { "Content-Type" => "text/plain" }, ["Test login failed: User #{user_id} not found"]]
       end
 
+      # :reek:UtilityFunction
       def fill_session(env, user)
         email = user.email
         expired_time = 2.hours.from_now.to_i
