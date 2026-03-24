@@ -6,13 +6,14 @@ module KeycloakRuby
   module Testing
     # Хелперы для тестов с Keycloak
     module KeycloakHelpers
-      # Быстрый вход: для браузерных тестов (:feature/:system) устанавливает сессию
-      # через middleware без прохождения OmniAuth. Для остальных — мокирует TokenService.
-      # Если нужна полная процедура входа, используйте full_sign_in.
+      # Быстрый вход: если включён fast_test_login, для браузерных тестов
+      # устанавливает сессию через middleware без OmniAuth.
+      # Если флаг выключен — идёт через полный логин.
+      # Для остальных типов тестов — мокирует TokenService.
       def sign_in(user, test_type: auto_detect_test_type)
         case test_type
         when :feature, :system
-          visit "/__test_login__/#{user.id}"
+          fast_login_enabled? ? visit("/__test_login__/#{user.id}") : full_sign_in(user, test_type:)
         else
           mock_token_service(user)
         end
@@ -119,6 +120,10 @@ module KeycloakRuby
         else
           :feature
         end
+      end
+
+      def fast_login_enabled?
+        KeycloakRuby.config.fast_test_login
       end
     end
   end
