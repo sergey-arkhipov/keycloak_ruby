@@ -50,7 +50,8 @@ module KeycloakRuby
                   :admin_client_id,
                   :admin_client_secret,
                   :oauth_client_id,
-                  :oauth_client_secret
+                  :oauth_client_secret,
+                  :fast_test_login
 
     attr_reader :config_path
 

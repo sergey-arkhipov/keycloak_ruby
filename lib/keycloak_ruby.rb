@@ -11,11 +11,13 @@ require "omniauth/rails_csrf_protection/railtie" if defined?(Rails)
 loader = Zeitwerk::Loader.for_gem
 loader.ignore(
   "#{__dir__}/generators",
-  "#{__dir__}/templates"
+  "#{__dir__}/templates",
+  "#{__dir__}/keycloak_ruby/railtie.rb"
 )
 loader.setup
 
 require "generators/keycloak_ruby/install_generator" if defined?(Rails)
+require "keycloak_ruby/railtie" if defined?(Rails::Railtie)
 
 # Module for interacting with Keycloak
 module KeycloakRuby

@@ -181,3 +181,36 @@ For test purpose there mock helper sign_in(user)
 
 - add `require "keycloak_ruby/testing/keycloak_helpers"` to keycloak_helper.rb
 - add sign_in in tests `config.include KeycloakRuby::Testing::KeycloakHelpers`
+
+### Fast test login
+
+По умолчанию `sign_in` в браузерных тестах (`:feature` / `:system`) проходит полный цикл через OmniAuth.
+Чтобы ускорить тесты, можно включить быстрый логин через Rack-middleware — он записывает фейковые токены
+прямо в сессию, минуя OmniAuth и Keycloak.
+
+Добавьте в `config/keycloak.yml`:
+
+```yaml
+test:
+  fast_test_login: true
+  # ... остальные параметры
+```
+
+После этого `sign_in(user)` в feature/system тестах будет использовать middleware вместо полного входа.
+
+Если в отдельном тесте нужно проверить сам логин (flash-сообщения, редиректы и т.д.),
+используйте `full_sign_in(user)` — он всегда проходит полный цикл через OmniAuth.
+
+```ruby
+# Большинство тестов — быстрый вход (при fast_test_login: true)
+sign_in(user)
+
+# Тесты, проверяющие логин
+full_sign_in(user)
+```
+
+| Тип теста | `sign_in` (fast_test_login: true) | `sign_in` (fast_test_login: false) | `full_sign_in` |
+|---|---|---|---|
+| `:feature` / `:system` | Middleware — сессия напрямую | OmniAuth mock → visit /login → клик | OmniAuth mock → visit /login → клик |
+| `:request` | `mock_token_service` | `mock_token_service` | `mock_token_service` |
+| `:controller` и др. | `mock_token_service` | `mock_token_service` | `mock_keycloak_login` без Capybara |
