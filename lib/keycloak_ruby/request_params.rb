@@ -10,7 +10,6 @@ module KeycloakRuby
     :body,
     :success_codes,
     :error_class,
-    :error_message,
-    keyword_init: true
+    :error_message
   )
 end
