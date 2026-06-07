@@ -48,7 +48,7 @@ Now under active development, so you need create controller and routes manually:
 
   def destroy
     id_token = session[:id_token]
-    keycloak_jwt_service.clear_tokens
+    reset_session
     logout_url = "#{KeycloakRuby.config.logout_url}?post_logout_redirect_uri=#{CGI.escape(root_url)}&" \
                  "id_token_hint=#{id_token}"
 
@@ -153,17 +153,14 @@ sequenceDiagram
 ### Key Flows
 
 1. **Initial Authentication**:
-
    - Controller → TokenService → Keycloak Server
    - Stores tokens in session
 
 2. **Token Refresh**:
-
    - TokenService → TokenRefresher → Keycloak Server
    - Automatic when token expires
 
 3. **Access Validation**:
-
    - Verifies token signature and claims
    - Checks user existence in local DB
 
@@ -209,8 +206,8 @@ sign_in(user)
 full_sign_in(user)
 ```
 
-| Тип теста | `sign_in` (fast_test_login: true) | `sign_in` (fast_test_login: false) | `full_sign_in` |
-|---|---|---|---|
-| `:feature` / `:system` | Middleware — сессия напрямую | OmniAuth mock → visit /login → клик | OmniAuth mock → visit /login → клик |
-| `:request` | `mock_token_service` | `mock_token_service` | `mock_token_service` |
-| `:controller` и др. | `mock_token_service` | `mock_token_service` | `mock_keycloak_login` без Capybara |
+| Тип теста              | `sign_in` (fast_test_login: true) | `sign_in` (fast_test_login: false)  | `full_sign_in`                      |
+| ---------------------- | --------------------------------- | ----------------------------------- | ----------------------------------- |
+| `:feature` / `:system` | Middleware — сессия напрямую      | OmniAuth mock → visit /login → клик | OmniAuth mock → visit /login → клик |
+| `:request`             | `mock_token_service`              | `mock_token_service`                | `mock_token_service`                |
+| `:controller` и др.    | `mock_token_service`              | `mock_token_service`                | `mock_keycloak_login` без Capybara  |
